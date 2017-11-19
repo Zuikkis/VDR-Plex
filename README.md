@@ -15,9 +15,6 @@ matches the rest.
 Installation:
 --------------
 
-Just clone this repository to "Plex Media Server" directory. You should then 
-have "Plex Media Server/Scanners/Movies/" and "Plex Media Server/Scanners/Series/"
-directories.
-
-
+Just clone this repository somewhere, and copy or link the Scanners directory to your
+"Plex Media Server" directory.
 
