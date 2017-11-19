@@ -24,9 +24,17 @@ def Scan(path, files, mediaList, subdirs):
         infoFile = open(file).read()
 
         title = re.search('^T (.*)$', infoFile,re.M)
-        episode = re.search('^S \(Ep\.\s+(\d+)(?:\:\d+)?(?:\/s(\d+))?\)\.\s+(.*)$', infoFile, re.M)
 
-        #logging.debug('Title : %s' %title)
+        # accepted formats for Episode 3 of season 1, episode name "epname"
+        # (3:22) epname
+        # (3:22/s1) epname
+        # (Ep 3:22) epname
+        # (Ep 3:22/s1) epname
+        # (Ep. 3:22) epname
+        # (Ep. 3:22/s1) epname
+        #      
+        # Both S and D lines are scanned.
+        episode = re.search('^(?:S|D) \((?:Ep\.|Ep)?\s*(\d+)(?:\:\d+)?(?:\/s(\d+))?\)\.\s+(.*)$', infoFile, re.M)
 
         if episode and title:
             tvshow = True
@@ -43,6 +51,8 @@ def Scan(path, files, mediaList, subdirs):
                 title = title.groups(1)[0]
             else:
                 title = "Unknown"
+
+            #logging.debug('Title : %s' %title)
 
 	    movie = Media.Movie(title)
 

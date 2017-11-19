@@ -13,7 +13,7 @@ import logging
 
 def Scan(path, files, mediaList, subdirs):
 
-  #logging.basicConfig(filename='/tmp/vdrscanner.log',level=logging.DEBUG)
+  logging.basicConfig(filename='/tmp/vdrscanner.log',level=logging.DEBUG)
 
   if len(files) >= 1:
 
@@ -24,9 +24,17 @@ def Scan(path, files, mediaList, subdirs):
         infoFile = open(file).read()
 
         title = re.search('^T (.*)$', infoFile,re.M)
-        episode = re.search('^S \(Ep\.\s+(\d+)(?:\:\d+)?(?:\/s(\d+))?\)\.\s+(.*)$', infoFile, re.M)
 
-        #logging.debug('Title : %s' %title)
+        # accepted formats for Episode 3 of season 1, episode name "epname"
+	# (3:22) epname
+	# (3:22/s1) epname
+	# (Ep 3:22) epname
+	# (Ep 3:22/s1) epname
+	# (Ep. 3:22) epname
+	# (Ep. 3:22/s1) epname
+	# 
+	# Both S and D lines are scanned.
+        episode = re.search('^(?:S|D) \((?:Ep\.|Ep)?\s*(\d+)(?:\:\d+)?(?:\/s(\d+))?\)\.\s+(.*)$', infoFile, re.M)
 
         if episode and title:
 	    tvshow = True
@@ -50,16 +58,16 @@ def Scan(path, files, mediaList, subdirs):
 		if epname:
                     epname = epname.groups(1)[0]
 
-            title = title.groups(1)[0]
-
-            rectime = re.search('^E \d+ (\S*) .*$', infoFile,re.M)
-            if rectime:
-                year = datetime.datetime.fromtimestamp(int(rectime.groups(1)[0])).year
-
-	    if (season == None):
+	    if epn and not season:
 	        season = 1
 
-	    movie = Media.Episode(title, season, epn, epname, year)
+            title = title.groups(1)[0]
+            logging.debug('Title : %s' %title)
+            logging.debug('Epn   : %s' %epn)
+            logging.debug('Season: %s' %season)
+            logging.debug('Epname: %s' %epname)
+
+	    movie = Media.Episode(title, season, epn, epname)
 
             for ts_filename in sorted(os.listdir(dir)):
                 if (ts_filename.endswith(".ts")):
