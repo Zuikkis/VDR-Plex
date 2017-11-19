@@ -13,7 +13,7 @@ import logging
 
 def Scan(path, files, mediaList, subdirs):
 
-  logging.basicConfig(filename='/tmp/vdrscanner.log',level=logging.DEBUG)
+  #logging.basicConfig(filename='/tmp/vdrscanner.log',level=logging.DEBUG)
 
   if len(files) >= 1:
 
@@ -62,10 +62,10 @@ def Scan(path, files, mediaList, subdirs):
 	        season = 1
 
             title = title.groups(1)[0]
-            logging.debug('Title : %s' %title)
-            logging.debug('Epn   : %s' %epn)
-            logging.debug('Season: %s' %season)
-            logging.debug('Epname: %s' %epname)
+            #logging.debug('Title : %s' %title)
+            #logging.debug('Epn   : %s' %epn)
+            #logging.debug('Season: %s' %season)
+            #logging.debug('Epname: %s' %epname)
 
 	    movie = Media.Episode(title, season, epn, epname)
 
